@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 60 40" enable-background="new 0 0 60 40" xml:space="preserve" width="60" height="40" preserveAspectRatio="none">
+<g id="Header_Buttons">
+	<g>
+		<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="7" y1="19.2437" x2="52.9096" y2="19.2437">
+			<stop  offset="0" style="stop-color:#99AEC2"/>
+			<stop  offset="0.4749" style="stop-color:#C2CDD5"/>
+			<stop  offset="1" style="stop-color:#99AEC2"/>
+		</linearGradient>
+		<path fill="url(#SVGID_2_)" d="M51.5,1.4h-43C7.7,1.4,7,2,7,2.9V35c0,0.9,0.7,1.6,1.5,1.6c3.5,0.7,38,0.6,42.9,0
+			c0.8,0,1.5-0.7,1.5-1.6V2.9C53,2,52.3,1.4,51.5,1.4z M51.5,34.4c0,0.4-0.3,0.7-0.7,0.7H9.2c-0.4,0-0.7-0.3-0.7-0.7V3.5
+			c0-0.4,0.3-0.7,0.7-0.7h41.6c0.4,0,0.7,0.3,0.7,0.7V34.4z"/>
+		<path fill="#7E92A6" d="M20.6,36.6H0.7l0,0.9c6,0.7,54.1,0.7,58.6,0l0-0.9H20.6z"/>
+		<path fill="#CBCDCE" d="M0.7,37.5c1.3,1.1,6.6,1.1,8.4,1.1h41.8c1.8,0,7.2,0,8.4-1.1H0.7z"/>
+		<path fill="#54677A" d="M24.6,37.5h10.9c0.3,0,1-0.3,1.2-0.9H23.3C23.5,37.2,24.3,37.5,24.6,37.5z"/>
+		<path fill="#647A8F" d="M0.7,37.5c1.3,1.1,6.6,1.1,8.4,1.1h41.8c1.8,0,7.2,0,8.4-1.1H0.7z"/>
+		<path opacity="0.2" fill="#FFFFFF" enable-background="new    " d="M25.5,2h26c0.4,0,0.7,0.3,0.7,0.7v32.4c0,0.4-0.3,0.7-0.7,0.7
+			H39.8L25.5,2z"/>
+		<ellipse fill="#54677A" cx="30" cy="2.1" rx="0.3" ry="0.3"/>
+	</g>
+</g>
+<g id="Layer_1">
+</g>
+<g id="Layer_3">
+</g>
+</svg>

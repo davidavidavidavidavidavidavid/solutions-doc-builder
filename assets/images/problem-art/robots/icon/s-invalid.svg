@@ -1,0 +1,21 @@
+<svg
+   version="1.1"
+   x="0px"
+   y="0px"
+   viewBox="0 0 58 62"
+   xml:space="preserve"
+   width="58"
+   height="62"
+   preserveAspectRatio="none"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+   <style
+     type="text/css" >
+	.st338{fill:#E0D4A1;}
+	.st339{fill:#ED1C24;}
+</style><polygon
+     class="st338"
+     points="14.7,31 14.5,5.7 43.7,5.5 43.7,31 51.8,31.3 29.1,51.8 5.7,31.1 "
+     transform="translate(0,5)" /><path
+     class="st339"
+     d="M 13.4,8.7 H 44.5 V 34.5 H 55 L 29,57.4 2.9,34.5 h 10.5 z m 29.1,2.1 h -27 V 36.6 H 8.4 L 29,54.7 49.6,36.5 h -7.1 z" /></svg>

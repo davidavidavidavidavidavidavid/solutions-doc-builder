@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" preserveAspectRatio="none"><defs><style>
+			.cls-1 {
+				fill: #fff;
+			}
+
+			.cls-2 {
+				fill: #085ba6;
+			}
+		</style></defs><g id="labels"><circle class="cls-1" cx="15" cy="15" r="15" /><ellipse class="cls-2" cx="15" cy="13.46" rx="10.86" ry="10.37" /><ellipse class="cls-1" cx="15" cy="13.36" rx="8.49" ry="8.1" /><path class="cls-2" d="M26.5,13.46A11.28,11.28,0,0,0,15,2.45a11.28,11.28,0,0,0-11.5,11A10.74,10.74,0,0,0,7.07,21.4h0l8,7.72,7.94-7.72h0A10.74,10.74,0,0,0,26.5,13.46Zm-19.67-.1A8,8,0,0,1,15,5.58a8,8,0,0,1,8.17,7.78A8,8,0,0,1,15,21.15,8,8,0,0,1,6.83,13.36Z" /></g></svg>

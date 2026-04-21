@@ -1,0 +1,26 @@
+<svg id="Layer_3" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 396 140.468" width="396" height="140.468" preserveAspectRatio="none"><defs><style>
+      .st0 {
+        stroke-width: 1.5px;
+      }
+
+      .st0, .st1 {
+        stroke-miterlimit: 1;
+      }
+
+      .st0, .st1, .st2 {
+        fill: none;
+        stroke: #2c2b2f;
+      }
+
+      .st1, .st2 {
+        stroke-width: 2.25px;
+      }
+
+      .st2 {
+        stroke-miterlimit: 3;
+      }
+
+      .st3 {
+        fill: #2c2b2f;
+      }
+    </style></defs><polygon class="st2" points="198 2.687503 120.002998 137.780497 275.997002 137.780497 198 2.687503" /><polygon class="st1" points="198 136.281401 160.298999 70.983399 235.700993 70.983399 198 136.281401" /><polygon class="st3" points="198 71.587899 179.583 103.4869 216.417 103.4869 198 71.587899" /><polygon class="st0" points="198 71.587899 179.583 103.4869 216.417 103.4869 198 71.587899" /></svg>

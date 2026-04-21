@@ -1,0 +1,7 @@
+<svg width="40" height="30" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+ <g>
+  <title>Layer 1</title>
+  <path transform="rotate(180 28.8,15.3) " id="svg_1" d="m36.8,12.5c0,4.4 -3.6,8 -8,8c0.4,1.9 2.2,4.2 3.9,5.6c-6.3,0 -11.9,-4.1 -11.9,-13.6c0,-4.4 3.6,-8 8,-8c4.4,0 8,3.6 8,8z" fill="rgba(92,92,92,0.3)"/>
+  <path transform="rotate(180 11.3,15.3) " id="svg_2" d="m19.2,12.5c0,4.4 -3.6,8 -8,8c0.4,1.9 2.2,4.2 3.9,5.6c-6.3,0 -11.9,-4.1 -11.9,-13.6c0,-4.4 3.6,-8 8,-8c4.4,0 8,3.6 8,8z" fill="rgba(92,92,92,0.3)"/>
+ </g>
+</svg>

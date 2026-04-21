@@ -1,0 +1,415 @@
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Roboto',sans-serif;font-size:14px;background:#f0f0f0;color:#1a1a1a;min-height:100vh}
+
+/* ── toolbar ── */
+#toolbar{position:fixed;top:0;left:0;right:0;height:52px;background:#1e3a5f;display:flex;align-items:center;gap:10px;padding:0 20px;z-index:100;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+#toolbar .title{color:#fff;font-weight:700;font-size:15px;flex-shrink:0}
+.tb-sep{width:1px;height:28px;background:rgba(255,255,255,.2);margin:0 4px}
+.tb-unit-group{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:4px;padding:3px 10px}
+.tb-unit-group label{color:rgba(255,255,255,.75);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.tb-unit-group input{background:none;border:none;color:#fff;font-family:'Roboto',sans-serif;font-size:14px;font-weight:700;width:48px;outline:none}
+.tb-unit-group input::placeholder{color:rgba(255,255,255,.35)}
+.tb-spacer{flex:1}
+.tb-btn{border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 14px;border-radius:4px;font-size:12px;font-family:'Roboto',sans-serif;font-weight:500;cursor:pointer;white-space:nowrap}
+.tb-btn.add-page{background:rgba(255,255,255,.1)}.tb-btn.add-page:hover{background:rgba(255,255,255,.2)}
+.tb-btn.add-lesson{background:#e8a020;border-color:#e8a020;color:#1a1a1a;font-weight:700}.tb-btn.add-lesson:hover{background:#f0b030}
+.tb-btn.print-btn{background:#fff;color:#1e3a5f;font-weight:700;border-color:#fff}.tb-btn.print-btn:hover{background:#e8f0fa}
+.tb-btn.save-btn{background:rgba(255,255,255,.1)}.tb-btn.save-btn:hover{background:rgba(255,255,255,.2)}
+.tb-btn.load-btn{background:rgba(255,255,255,.1)}.tb-btn.load-btn:hover{background:rgba(255,255,255,.2)}
+.tb-btn.export-csv-btn{background:rgba(255,255,255,.1)}.tb-btn.export-csv-btn:hover{background:rgba(255,255,255,.2)}
+.tb-btn.view-toggle{background:rgba(255,255,255,.1);min-width:110px;text-align:center}
+.tb-btn.view-toggle:hover{background:rgba(255,255,255,.2)}
+.zoom-ctrl{display:flex;align-items:center;gap:4px}
+.tb-btn.zoom-btn{padding:6px 10px;min-width:28px;text-align:center;font-size:14px;line-height:1}
+.zoom-pct{color:#fff;font-size:12px;font-weight:700;font-family:'Roboto',sans-serif;min-width:36px;text-align:center}
+.tb-btn.upload-pdf{background:#e8a020;border-color:#e8a020;color:#1a1a1a;font-weight:700}.tb-btn.upload-pdf:hover{background:#f0b030}
+.autosave-status{color:rgba(255,255,255,.45);font-size:10px;white-space:nowrap}
+
+/* ── PDF loading overlay ── */
+.pdf-loading-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:400;align-items:center;justify-content:center}
+.pdf-loading-overlay.show{display:flex}
+.pdf-loading-box{background:#fff;border-radius:10px;padding:28px 36px;display:flex;flex-direction:column;align-items:center;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.3);min-width:260px}
+.pdf-loading-spinner{width:32px;height:32px;border:3px solid #dce8f7;border-top-color:#1e3a5f;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#pdf-loading-msg{font-size:13px;color:#1a1a1a;font-weight:500;text-align:center}
+
+/* ── PDF page placeholder (shown while page renders) ── */
+.pdf-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:#bbb;font-family:'Roboto',sans-serif;pointer-events:none;background:transparent}
+
+/* ── canvas ── */
+#canvas{margin-top:52px;padding:24px 24px 8px;display:flex;flex-direction:column;gap:6px;align-items:center}
+.lesson-label{width:8.5in;padding:6px 0 3px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#888;border-top:2px solid #e8a020;margin-top:16px;display:flex;align-items:center;gap:10px;transform:scale(var(--screen-scale,.75));transform-origin:top center}
+.lesson-label:first-child{margin-top:0;border-top-color:#1e3a5f}
+.lesson-label-text{flex:1}
+.lesson-drag-handle{cursor:grab;color:#ccc;font-size:14px;user-select:none}.lesson-drag-handle:active{cursor:grabbing}
+
+/* ── sheet — 8.5in × 11in (letter portrait). Scaled to screen via JS --screen-scale. ── */
+.sheet{width:8.5in;height:11in;overflow:visible;background:#fff;display:flex;flex-direction:column;box-shadow:0 2px 10px rgba(0,0,0,.18);position:relative;-webkit-print-color-adjust:exact;print-color-adjust:exact;transform:scale(var(--screen-scale,.75));transform-origin:top center;margin-bottom:var(--screen-margin-bottom,-264px)}
+body.view-online .overflow-bar{display:none!important}
+
+/* sheet drag-to-reorder */
+.sheet.dragging{opacity:.4}
+.sheet-drag-handle{position:absolute;left:0;top:50%;transform:translateY(-50%);width:18px;height:40px;background:#1e3a5f;border-radius:0 4px 4px 0;cursor:grab;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.7);font-size:11px;z-index:10;opacity:0;transition:opacity .15s}
+.sheet:hover .sheet-drag-handle{opacity:1}
+.sheet-drag-handle:active{cursor:grabbing}
+.lesson-label.drag-over-top,.sheet.drag-over-top{outline:3px solid #1e3a5f;outline-offset:2px}
+
+/* ── page grid — 2×2 cells filling the sheet below the header ── */
+.page-grid{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;background:#fff;gap:0;overflow:visible}
+
+/* ── thumbnail cells ── */
+.thumb-cell{box-sizing:border-box;overflow:hidden;position:relative;background:#fff;display:flex;align-items:center;justify-content:center;padding:20px}
+.thumb-cell-empty{background:#fff}
+.img-frame{overflow:hidden;display:flex;align-items:center;justify-content:center}
+.img-frame img.page-img,.img-frame canvas.page-img{max-width:100%;max-height:100%;object-fit:contain;display:block;border:1px solid #999;box-shadow:2px 2px 5px rgba(0,0,0,.15)}
+.upload-prompt{display:flex;flex-direction:column;align-items:center;gap:10px;color:#bbb;pointer-events:none}
+.upload-prompt .big-icon{font-size:36px}
+.upload-prompt p{font-size:12px}
+.upload-btn{pointer-events:all;background:#1e3a5f;color:#fff;border:none;padding:7px 16px;border-radius:5px;font-size:12px;font-family:'Roboto',sans-serif;font-weight:500;cursor:pointer}
+.upload-btn:hover{background:#2a4f7c}
+.file-input{display:none}
+.remove-img{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:10}
+.thumb-cell.has-image .remove-img{display:flex}
+.thumb-cell.has-image .upload-prompt,.thumb-cell.has-pdf-rendered .upload-prompt{display:none}
+
+/* ── solutions cell ── */
+.sol-cell{overflow:visible;min-height:0;display:flex;flex-direction:column;padding:0.1in 0.18in 0.12in 0.15in;background:#fff;gap:0;position:relative}
+
+/* ── layout mode grid-area assignments ── */
+
+/* 4-up: all four cells are thumbnails */
+.layout-4up .thumb-cell-0{grid-area:1/1/2/2}
+.layout-4up .thumb-cell-1{grid-area:1/2/2/3}
+.layout-4up .thumb-cell-2{grid-area:2/1/3/2}
+.layout-4up .thumb-cell-3{grid-area:2/2/3/3}
+.layout-4up .sol-cell{display:none}
+
+/* 3-up: top row = 2 thumbs, bottom-left = thumb, bottom-right = solutions */
+.layout-3up .thumb-cell-0{grid-area:1/1/2/2}
+.layout-3up .thumb-cell-1{grid-area:1/2/2/3}
+.layout-3up .thumb-cell-2{grid-area:2/1/3/2}
+.layout-3up .thumb-cell-3{display:none}
+.layout-3up .sol-cell{grid-area:2/2/3/3;padding:8px}
+.layout-3up .sol-blocks{gap:6px}
+.layout-3up .sol-text{font-size:11px}
+
+/* 2-up: top row = 2 thumbs, bottom row = solutions spanning full width */
+.layout-2up .thumb-cell-0{grid-area:1/1/2/2}
+.layout-2up .thumb-cell-1{grid-area:1/2/2/3}
+.layout-2up .thumb-cell-2{display:none}
+.layout-2up .thumb-cell-3{display:none}
+.layout-2up .sol-cell{grid-area:2/1/3/3}
+
+/* 1-up: top-left = thumb, top-right = accessible empty slot, bottom row = solutions spanning full width */
+.layout-1up .thumb-cell-0{grid-area:1/1/2/2}
+.layout-1up .thumb-cell-1{grid-area:1/2/2/3}
+.layout-1up .thumb-cell-2{display:none}
+.layout-1up .thumb-cell-3{display:none}
+.layout-1up .sol-cell{grid-area:2/1/3/3}
+
+/* ── BA-style page header (full-width, above the 2×2 grid) ── */
+.page-header{
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#1a2744;
+  border-bottom:3px solid #f5a623;
+  padding:.07in .18in;
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+}
+/* decorative swoosh */
+.page-header::after{
+  content:'';
+  position:absolute;
+  top:0;right:0;bottom:0;
+  width:55%;
+  background:linear-gradient(160deg,#8c0a22 0%,#c41230 100%);
+  clip-path:polygon(48% 0%,100% 0%,100% 100%,18% 100%);
+  pointer-events:none;
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+}
+.page-header-title{
+  font-size:13px;font-weight:700;font-family:'Roboto',sans-serif;
+  color:#fff;line-height:1.25;
+  position:relative;z-index:1;
+}
+/* ── layout picker ── */
+.layout-picker{display:flex;gap:3px;position:relative;z-index:2}
+.layout-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.65);border-radius:3px;padding:2px 7px;font-size:10px;font-family:'Roboto',sans-serif;font-weight:700;cursor:pointer;letter-spacing:.05em;white-space:nowrap}
+.layout-btn:hover{background:rgba(255,255,255,.22);color:#fff}
+.layout-btn.active{background:#fff;color:#1a2744;border-color:#fff}
+
+/* ── panel section title (header text above blocks) ── */
+.section-title{font-size:13px;font-weight:700;color:#c41230;font-family:'Roboto',sans-serif;letter-spacing:normal;text-transform:none;padding-top:10px;margin-bottom:5px;flex-shrink:0;cursor:text;min-height:15px;line-height:1.4}
+.section-title:empty::before{content:'Click to set section title…';color:#e0b0b8;font-weight:400}
+.section-title[contenteditable="true"]{outline:none}
+
+/* ── section title BLOCK (inline entry inside sol-blocks) ── */
+.st-block{display:flex;gap:9px;align-items:baseline;padding:10px 8px 2px;flex:0 0 auto;position:relative;background:#fff;user-select:none}
+.st-block.dragging{opacity:.4}
+.st-block.drag-over{border-top:2px solid #1a2744}
+.st-block-text{font-size:13px;font-weight:700;color:#c41230;font-family:'Roboto',sans-serif;flex:1;min-width:0;cursor:text;line-height:1.4;outline:none}
+.st-block-text:empty::before{content:'Section Title';color:#e0b0b8;font-weight:400}
+
+/* ── capacity bars (in sidebar) ── */
+.cap-bars{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.cap-entry{display:flex;flex-direction:column;gap:3px}
+.cap-label-row{display:flex;justify-content:space-between;font-size:9px;font-family:'Roboto',sans-serif;color:#94a3b8;letter-spacing:.04em}
+.cap-track{height:5px;background:#e5e7eb;border-radius:3px;overflow:hidden}
+.cap-fill{height:100%;border-radius:3px;transition:width .25s,background-color .25s;width:0%}
+.cap-fill-inprint{background:#22c55e}
+.cap-fill-inprint.amber{background:#f59e0b}
+.cap-fill-inprint.over{background:#ef4444}
+.cap-fill-hidden{background:#94a3b8}
+
+/* ── sheet + sidebar wrapper ── */
+.sheet-and-sidebar{position:relative;display:inline-block}
+/* ── solutions sidebar (off-sheet controls) ── */
+.sol-sidebar{position:absolute;left:calc(4.25in + 4.25in * var(--screen-scale, 0.75) + 6px);top:0;bottom:0;width:160px;display:flex;flex-direction:column;gap:8px;padding:8px 6px;opacity:1;pointer-events:auto;overflow-y:auto}
+.sheet-and-sidebar.layout-4up > .sol-sidebar{display:none}
+.sol-sb-btn{background:#fff;border:1px dashed #c8d0da;color:#94a3b8;border-radius:4px;padding:5px 8px;font-size:11px;font-family:'Roboto',sans-serif;cursor:pointer;text-align:left;width:100%;white-space:nowrap}
+.sol-sb-btn:hover{border-color:#1a2744;color:#1a2744;background:#f0f3f8}
+
+/* ── comments section (sidebar) ── */
+.comments-section{margin-top:4px;border-top:1px solid #e5e7eb;padding-top:8px;display:flex;flex-direction:column;gap:5px;flex-shrink:0}
+.comments-heading{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8;font-family:'Roboto',sans-serif}
+.comments-list{display:flex;flex-direction:column;gap:6px}
+.comment-item{display:flex;gap:5px;align-items:flex-start;position:relative}
+.comment-item:hover .comment-delete-btn{opacity:1}
+.comment-avatar{flex-shrink:0;width:22px;height:22px;background:#1a2744;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;font-family:'Roboto',sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.comment-body{flex:1;min-width:0}
+.comment-text{font-size:10px;color:#1a1a1a;font-family:'Roboto',sans-serif;line-height:1.45;word-break:break-word}
+.comment-date{font-size:9px;color:#94a3b8;font-family:'Roboto',sans-serif;margin-top:1px}
+.comment-delete-btn{opacity:0;transition:opacity .15s;background:none;border:none;cursor:pointer;font-size:13px;color:#bbb;padding:0 2px;line-height:1;flex-shrink:0;align-self:flex-start}
+.comment-delete-btn:hover{color:#991b1b}
+.comments-add-btn{background:none;border:1px dashed #c8d0da;color:#94a3b8;border-radius:4px;padding:4px 6px;font-size:10px;font-family:'Roboto',sans-serif;cursor:pointer;text-align:left;width:100%}
+.comments-add-btn:hover{border-color:#1a2744;color:#1a2744;background:#f0f3f8}
+.comment-form{display:none;flex-direction:column;gap:5px}
+.comment-initials-input{font-family:'Roboto',sans-serif;font-size:11px;padding:4px 6px;border:1px solid #d0d0d0;border-radius:3px;outline:none;width:100%;text-transform:uppercase}
+.comment-initials-input:focus{border-color:#1e3a5f}
+.comment-text-input{font-family:'Roboto',sans-serif;font-size:11px;padding:4px 6px;border:1px solid #d0d0d0;border-radius:3px;outline:none;width:100%;resize:vertical;line-height:1.4}
+.comment-text-input:focus{border-color:#1e3a5f}
+.comment-form-btns{display:flex;gap:5px}
+.comment-post-btn{flex:1;background:#1e3a5f;border:none;color:#fff;padding:4px 6px;border-radius:3px;font-family:'Roboto',sans-serif;font-size:11px;font-weight:700;cursor:pointer}
+.comment-post-btn:hover{background:#2a4f7c}
+.comment-cancel-btn{background:none;border:1px solid #d0d0d0;color:#888;padding:4px 6px;border-radius:3px;font-family:'Roboto',sans-serif;font-size:11px;cursor:pointer}
+.comment-cancel-btn:hover{background:#f5f5f5}
+
+/* ── blocks container ── */
+.sol-blocks{display:flex;flex-direction:column;overflow:hidden;gap:12px}
+
+/* ── question group ── */
+.q-group{display:flex;gap:9px;padding:7px 8px;border-bottom:1px solid #e8ecf0;flex:0 0 auto;position:relative;background:#fff;user-select:none}
+.q-group:last-child{border-bottom:none}
+.q-group.dragging{opacity:.4}
+.q-group.drag-over{border-top:2px solid #1a2744}
+.drag-handle{flex-shrink:0;width:14px;cursor:grab;display:flex;align-items:flex-start;padding-top:3px;color:#ccc;font-size:12px;user-select:none;opacity:0;transition:opacity .15s}
+.drag-handle:active{cursor:grabbing}
+.q-group:hover .drag-handle,.st-block:hover .drag-handle{opacity:1;color:#aaa}
+.q-num-col{flex-shrink:0;width:40px;padding-top:2px}
+
+/* problem number badge — bold navy */
+.num-badge{font-size:11px;font-weight:700;color:#1a2744;background:#e8eef7;border-radius:3px;min-width:38px;height:20px;display:flex;align-items:center;justify-content:center;padding:0 4px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.q-entries{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+
+/* ── print toggle ── */
+.q-group-toggle{position:absolute;right:0;top:4px;opacity:0;transition:opacity .15s;background:none;border:none;cursor:pointer;font-size:9px;font-family:'Roboto',sans-serif;font-weight:700;letter-spacing:.05em;color:#94a3b8;padding:1px 4px;line-height:1;border-radius:3px}
+.q-group-toggle:hover{background:#f0f0f0;color:#1a2744}
+.q-group:hover .q-group-toggle{opacity:1}
+.q-group.print-off .q-entries,.q-group.print-off .q-num-col{opacity:.4}
+.print-off-badge{display:none;font-size:7.5px;font-weight:700;letter-spacing:.06em;padding:2px 5px;border-radius:10px;background:#94a3b8;color:#fff;text-transform:uppercase;margin-top:3px;white-space:nowrap;text-align:center}
+body.view-online .q-group.print-off .print-off-badge{display:block}
+
+/* ── individual entry ── */
+.sol-entry{position:relative}
+.sol-entry:hover .entry-actions,.st-block:hover .entry-actions{display:flex}
+.entry-actions{display:none;position:absolute;top:0;right:0;gap:4px}
+.ea-btn{background:none;border:none;cursor:pointer;font-size:12px;color:#bbb;padding:0 2px;line-height:1}
+.ea-btn:hover{color:#1a2744}
+.ea-btn.del:hover{color:#991b1b}
+
+/* type tags — pill shape */
+.type-tag{display:inline-block;font-size:8px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:2px 7px;border-radius:10px;margin-bottom:2px}
+.tag-full-solution{background:#1a2744;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.tag-look-out{background:#f59e0b;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.tag-connections{background:#22c55e;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.tag-prompt{background:#9333ea;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.tag-custom{background:#ebebeb;color:#444}
+
+.sol-text{font-size:11px;line-height:1.55;color:#333;word-break:break-word}
+.sol-text .katex{font-size:1em}
+.sol-diag{margin-top:3px}
+.sol-diag .katex{font-size:1.05em}
+.sol-batex-img{max-width:100%;height:auto;display:block}
+.sol-entry-img{max-width:100%;height:auto;display:block}
+.sol-img-remove-btn{background:none;border:1px solid #d0d0d0;color:#666;border-radius:3px;cursor:pointer;padding:2px 6px;font-size:10px;margin-top:4px;display:inline-block;font-family:'Roboto',sans-serif}
+.sol-img-remove-btn:hover{background:#fee2e2;color:#991b1b;border-color:#f87171}
+.img-upload-area{display:flex;flex-direction:column;gap:6px}
+.img-preview-wrap{margin-top:4px;display:flex;flex-direction:column;gap:6px}
+#img-remove-btn{background:none;border:1px solid #d0d0d0;color:#666;border-radius:3px;cursor:pointer;padding:4px 8px;font-size:11px;font-family:'Roboto',sans-serif;align-self:flex-start}
+#img-remove-btn:hover{background:#fee2e2;color:#991b1b;border-color:#f87171}
+#img-upload-btn{background:#1e3a5f;color:#fff;border:none;padding:6px 14px;border-radius:4px;font-size:12px;font-family:'Roboto',sans-serif;font-weight:500;cursor:pointer;align-self:flex-start}
+#img-upload-btn:hover{background:#2a4f7c}
+.batex-zoom-bar{display:flex;align-items:center;gap:4px;margin-top:3px;opacity:0;transition:opacity .15s}
+.sol-entry:hover .batex-zoom-bar{opacity:1}
+.bz-btn{background:#f5f5f5;border:1px solid #d0d0d0;border-radius:3px;cursor:pointer;padding:1px 6px;font-size:12px;line-height:1.4;color:#444}
+.bz-btn:hover{background:#e8e8e8}
+.bz-pct{min-width:32px;text-align:center;font-size:10px;font-family:'Roboto',sans-serif;color:#666}
+
+/* ── area model diagram ── */
+.area-model-wrap{margin-top:4px;overflow:auto}
+.area-model-table{border-collapse:collapse;font-size:10px;font-family:'Roboto',sans-serif}
+.area-model-table td,.area-model-table th{padding:0}
+.am-cell{border:1px solid #999;text-align:center;vertical-align:middle;font-size:10px;color:#1a1a1a;background:#fff;font-weight:500}
+.am-col-header{text-align:center;vertical-align:bottom;font-size:10px;font-weight:700;color:#1a2744;padding-bottom:3px;border:none;background:transparent}
+.am-row-header{text-align:right;vertical-align:middle;font-size:10px;font-weight:700;color:#1a2744;padding-right:5px;border:none;background:transparent}
+.am-corner{border:none;background:transparent}
+
+/* ── add solution row removed from sheet; buttons live in .sol-sidebar ── */
+
+/* ── page footer — thin line + page number (flex item at sheet bottom) ── */
+.page-footer{
+  flex-shrink:0;
+  padding:3px 10px 4px;
+  font-size:8px;
+  font-family:'Roboto',sans-serif;
+  color:#888;
+  letter-spacing:.04em;
+  border-top:1px solid #1a2744;
+  text-align:right;
+  background:#fff;
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+}
+
+/* ── gap zones (insert-zone between items) ── */
+.insert-zone{width:11in;height:0;position:relative;overflow:visible;z-index:10;transition:height .15s}
+.insert-zone:hover,.insert-zone.form-open{height:40px}
+#canvas.is-dragging .insert-zone{pointer-events:none;opacity:0}
+.iz-inner{position:absolute;inset:0;display:flex;align-items:center}
+.iz-bar{display:flex;gap:8px;width:100%;padding:0 4px;opacity:0;transition:opacity .15s}
+.insert-zone:hover .iz-bar,.insert-zone.form-open .iz-bar{opacity:1}
+.insert-zone.form-open .iz-bar{display:none}
+.iz-btn{background:#fff;border:1px dashed #bbb;color:#888;border-radius:3px;padding:4px 12px;font-size:11px;font-family:'Roboto',sans-serif;cursor:pointer;white-space:nowrap}
+.iz-btn:hover{border-color:#1e3a5f;color:#1e3a5f;background:#edf2fb}
+.iz-btn.iz-break:hover{border-color:#e8a020;color:#9a6500;background:#fffbf0}
+.iz-form{display:none;align-items:center;gap:8px;width:100%;padding:0 4px}
+.insert-zone.form-open .iz-form{display:flex}
+.iz-lnum,.iz-lname{font-family:'Roboto',sans-serif;font-size:12px;padding:4px 8px;border:1px solid #d0d0d0;border-radius:3px;outline:none;color:#1a1a1a}
+.iz-lnum{width:110px}.iz-lname{flex:1}
+.iz-lnum:focus,.iz-lname:focus{border-color:#1e3a5f}
+.iz-ok-btn{background:#1e3a5f;border:none;color:#fff;padding:4px 12px;border-radius:3px;font-family:'Roboto',sans-serif;font-size:12px;font-weight:700;cursor:pointer}
+.iz-ok-btn:hover{background:#2a4f7c}
+.iz-cancel-btn{background:none;border:1px solid #d0d0d0;color:#888;padding:4px 10px;border-radius:3px;font-family:'Roboto',sans-serif;font-size:12px;cursor:pointer}
+.iz-cancel-btn:hover{background:#f5f5f5}
+
+/* ── lesson label — rename & delete ── */
+.ll-edit,.ll-delete{background:none;border:none;cursor:pointer;font-size:13px;padding:0 3px;line-height:1;opacity:0;transition:opacity .15s;color:#aaa}
+.lesson-label:hover .ll-edit,.lesson-label:hover .ll-delete,.lesson-label.editing .ll-edit,.lesson-label.editing .ll-delete{opacity:1}
+.ll-edit:hover{color:#1e3a5f}
+.ll-delete:hover{color:#991b1b}
+.ll-edit-form{display:none;align-items:center;gap:6px;flex:2}
+.lesson-label.editing .ll-edit-form{display:flex}
+.lesson-label.editing .lesson-label-text{display:none}
+.lesson-label.editing .ll-edit,.lesson-label.editing .ll-delete{display:none}
+.ll-num-in,.ll-name-in{font-family:'Roboto',sans-serif;font-size:12px;padding:3px 7px;border:1px solid #d0d0d0;border-radius:3px;outline:none;color:#1a1a1a;background:#fff}
+.ll-num-in{width:100px}.ll-name-in{flex:1}
+.ll-num-in:focus,.ll-name-in:focus{border-color:#1e3a5f}
+.ll-save-btn{background:#1e3a5f;border:none;color:#fff;padding:3px 10px;border-radius:3px;font-family:'Roboto',sans-serif;font-size:11px;font-weight:700;cursor:pointer}
+.ll-save-btn:hover{background:#2a4f7c}
+.ll-cancel-btn{background:none;border:1px solid #d0d0d0;color:#888;padding:3px 8px;border-radius:3px;font-family:'Roboto',sans-serif;font-size:11px;cursor:pointer}
+.ll-cancel-btn:hover{background:#f5f5f5}
+
+/* ── sheet delete ── */
+.sheet-del-wrap{position:absolute;top:8px;right:8px;z-index:20;opacity:0;transition:opacity .15s;display:flex;align-items:center;gap:6px}
+.sheet:hover .sheet-del-wrap{opacity:1}
+.sheet-del-btn{background:rgba(0,0,0,.45);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.sheet-del-btn:hover{background:rgba(153,27,27,.8)}
+.sheet-del-confirm{display:none;align-items:center;gap:6px;background:#fff;border:1px solid #ddd;border-radius:4px;padding:5px 10px;font-size:11px;color:#1a1a1a;box-shadow:0 2px 8px rgba(0,0,0,.15);white-space:nowrap}
+.sheet-del-confirm.show{display:flex}
+.sheet-del-yes{background:#991b1b;border:none;color:#fff;padding:3px 10px;border-radius:3px;font-family:'Roboto',sans-serif;font-size:11px;font-weight:700;cursor:pointer}
+.sheet-del-yes:hover{background:#7f1d1d}
+.sheet-del-no{background:none;border:1px solid #d0d0d0;color:#555;padding:3px 8px;border-radius:3px;font-family:'Roboto',sans-serif;font-size:11px;cursor:pointer}
+.sheet-del-no:hover{background:#f5f5f5}
+
+/* ── bottom buttons ── */
+#bottom-btns{width:8.5in;display:flex;gap:12px;padding:16px 0 32px}
+.bot-btn{flex:1;padding:14px;border-radius:6px;font-size:13px;font-family:'Roboto',sans-serif;font-weight:500;cursor:pointer}
+.bot-add-page{background:none;border:2px dashed #bbb;color:#888}.bot-add-page:hover{border-color:#1e3a5f;color:#1e3a5f;background:#f0f5ff}
+.bot-add-lesson{background:none;border:2px dashed #e8a020;color:#b07010;font-weight:700}.bot-add-lesson:hover{background:#fffbf0}
+
+/* ── modals ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:8px;padding:24px 28px;box-shadow:0 8px 32px rgba(0,0,0,.25);display:flex;flex-direction:column;gap:14px}
+.modal-box h2{font-size:16px;font-weight:700;color:#1e3a5f}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#888}
+.field input,.field select,.field textarea{font-family:'Roboto',sans-serif;font-size:13px;padding:7px 10px;border:1px solid #d0d0d0;border-radius:4px;color:#1a1a1a;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#1e3a5f}
+.field textarea{resize:vertical;line-height:1.55}
+.field .hint{font-size:10.5px;color:#aaa}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:4px}
+.m-cancel{background:none;border:1px solid #d0d0d0;color:#555;padding:7px 16px;border-radius:4px;font-family:'Roboto',sans-serif;font-size:13px;cursor:pointer}.m-cancel:hover{background:#f5f5f5}
+.m-save{background:#1e3a5f;border:none;color:#fff;padding:7px 18px;border-radius:4px;font-family:'Roboto',sans-serif;font-size:13px;font-weight:700;cursor:pointer}.m-save:hover{background:#2a4f7c}
+.m-save.m-append{background:#555}.m-save.m-append:hover{background:#333}
+.toggle-diag{background:none;border:1px solid #d0d0d0;color:#555;border-radius:4px;padding:5px 12px;font-size:12px;font-family:'Roboto',sans-serif;cursor:pointer;align-self:flex-start}.toggle-diag:hover{border-color:#1e3a5f;color:#1e3a5f}
+
+/* ── diagram tabs ── */
+.diag-tabs{display:flex;gap:0;border-bottom:1px solid #d0d0d0;margin-bottom:8px}
+.diag-tab{background:none;border:none;border-bottom:2px solid transparent;padding:5px 12px;font-size:12px;font-family:'Roboto',sans-serif;cursor:pointer;color:#888;margin-bottom:-1px}
+.diag-tab.active{color:#1e3a5f;border-bottom-color:#1e3a5f;font-weight:700}
+.diag-tab-panel{display:none}.diag-tab-panel.active{display:flex;flex-direction:column;gap:8px}
+
+#diag-section{display:none}#diag-section.show{display:flex;flex-direction:column;gap:8px}
+.diag-preview{border:1px solid #e0e0e0;border-radius:4px;padding:8px 12px;min-height:38px;font-size:13px;background:#fafafa;word-break:break-word}
+#custom-label-row{display:none}#custom-label-row.show{display:flex;flex-direction:column;gap:5px}
+
+/* ── area model editor inputs ── */
+.am-inputs{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.am-inputs input{width:90px}
+.am-inputs span{color:#888;font-size:13px}
+.am-editor-preview{border:1px solid #e0e0e0;border-radius:4px;padding:10px 14px;background:#fafafa;overflow:auto}
+
+/* ── batex diagram editor ── */
+.batex-coming-soon{border:1px dashed #c0c8d8;border-radius:4px;padding:12px 14px;background:#f5f7fb;color:#6b7a96;font-size:12px;font-style:italic;line-height:1.5}
+
+/* ── cell right-click context menu ── */
+.cell-ctx-menu{position:fixed;background:#fff;border:1px solid #d0d0d0;border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,.18);z-index:300;min-width:180px;padding:4px 0;display:none}
+.cell-ctx-menu.show{display:block}
+.ctx-item{padding:7px 14px;font-size:12px;font-family:'Roboto',sans-serif;cursor:pointer;color:#1a1a1a;white-space:nowrap}
+.ctx-item:hover{background:#f0f3f8;color:#1e3a5f}
+.ctx-item.danger:hover{background:#fee2e2;color:#991b1b}
+.ctx-sep{height:1px;background:#e8e8e8;margin:3px 0}
+
+
+/* ── toast notification ── */
+.app-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:#1a2744;color:#fff;font-size:12px;font-family:'Roboto',sans-serif;padding:8px 18px;border-radius:20px;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:500;white-space:nowrap}
+.app-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── print ── */
+@media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  body{margin:0;padding:0}
+  .sheet{overflow:hidden!important}
+  #toolbar,#bottom-btns,.entry-actions,
+  .remove-img,.upload-btn,.drag-handle,
+  .sheet-drag-handle,.insert-zone,.sheet-del-wrap,
+  .ll-edit,.ll-delete,.ll-edit-form,.q-group-toggle,
+  .batex-zoom-bar,.layout-picker,.app-toast,.sol-sidebar{display:none!important}
+  .q-group.print-off{display:none!important}
+  .comments-section{display:none!important}
+  .section-title:empty{display:none}
+  .section-title{cursor:default}
+  .upload-prompt{display:none}
+  #canvas{margin:0;padding:0;gap:0}
+  .sheet{transform:none!important;margin:0!important;page-break-after:always;break-after:page;box-shadow:none;width:8.5in!important;height:11in!important}
+  .lesson-label{transform:none!important;margin:0!important}
+  @page{size:letter portrait;margin:0}
+}

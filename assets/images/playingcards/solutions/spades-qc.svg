@@ -1,0 +1,9 @@
+<svg id="Layer_3" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 396 108" width="396" height="108" preserveAspectRatio="none"><defs><style>
+      .st0 {
+        fill: #2cbeef;
+        stroke: #2c2b2f;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 2.25px;
+      }
+    </style></defs><polygon class="st0" points="198 2 146 2 146 28 198 28 250 28 250 2 198 2" /><polygon class="st0" points="198 28 146 28 146 54 198 54 250 54 250 28 198 28" /><polygon class="st0" points="198 54 146 54 146 80 198 80 250 80 250 54 198 54" /><polygon class="st0" points="198 80 146 80 146 106 198 106 250 106 250 80 198 80" /></svg>

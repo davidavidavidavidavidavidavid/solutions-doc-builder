@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve" width="40" height="40" preserveAspectRatio="none">
+<g id="BG" display="none">
+</g>
+<g id="Header_Buttons">
+	<path fill="#AAA" d="M33,7.5L20.6,2.1L6.3,8.6L1.4,19.9l5,14.2l14.5,3.4l14.5-7.2l3.2-12L33,7.5z"/>
+	<path fill="#FFC640" d="M20,20.6l0.6-18.5L33,7.5L38.6,18.3z"/>
+	<polygon opacity="0.4" fill="#FFFFFF" points="3,20.7 7.9,9.3 20.5,3.6 20.6,2.1 6.3,8.6 1.4,19.9 6.4,34.1 7.4,33.1 	"/>
+</g>
+</svg>

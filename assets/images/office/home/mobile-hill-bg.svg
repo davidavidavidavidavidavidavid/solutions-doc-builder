@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 952 94" enable-background="new 0 0 952 94" xml:space="preserve" width="952" height="94" preserveAspectRatio="none">
+<pattern  x="-153" y="-1454" width="69.3" height="120" patternUnits="userSpaceOnUse" id="BG_Hill_Argyle" viewBox="0 0 69.3 120" overflow="visible"><g transform="translate(0 120)">
+		<rect y="-120" fill="#3E803E" width="69.3" height="120"/>
+		<polyline fill="#397A40" points="0,-120 17.3,-90 34.6,-120 		"/>
+		<polyline fill="#397A40" points="34.6,-120 52,-90 69.3,-120 		"/>
+		<polyline fill="#397D3D" points="0,-60 17.3,-90 0,-120 		"/>
+		<polygon fill="#397740" points="34.6,-120 17.3,-90 34.6,-60 52,-90 		"/>
+		<polyline fill="#397D3D" points="69.3,-120 52,-90 69.3,-60 		"/>
+		<polygon fill="#397A40" points="17.3,-90 0,-60 17.3,-30 34.6,-60 		"/>
+		<polygon fill="#397A40" points="52,-90 34.6,-60 52,-30 69.3,-60 		"/>
+		<polyline fill="#397740" points="0,0 17.3,-30 0,-60 		"/>
+		<polygon fill="#397D3D" points="34.6,-60 17.3,-30 34.6,0 52,-30 		"/>
+		<polyline fill="#397740" points="69.3,-60 52,-30 69.3,0 		"/>
+		<polyline fill="#397A40" points="34.6,0 17.3,-30 0,0 		"/>
+		<polyline fill="#397A40" points="69.3,0 52,-30 34.6,0 		"/>
+		<path fill="#3E803E" d="M52.3,0h-0.6l0,0l-17-29.5L17.6,0l0,0H17l0,0L0-29.5v-1L17-60L0-89.5v-1L17-120h0.6l17,29.5l17-29.5h0.6
+			l17,29.5v1L52.3-60l17,29.5v1L52.3,0L52.3,0z M34.9-90l17,29.5L69-90l-17-29.5L34.9-90z M17.3-60.5l17-29.5l-17-29.5L0.3-90
+			L17.3-60.5z M34.4-30l-17-29.5L0.3-30l17,29.5L34.4-30z M34.6-30.5l17-29.5l-17-29.5L17.6-60L34.6-30.5z M52-0.5L69-30L52-59.5
+			L34.9-30L52-0.5z"/>
+	</g>
+</pattern>
+<g id="Characters">
+</g>
+<g id="Isadora_Screen_Shot">
+</g>
+<g id="BG_Purple_2">
+	<g>
+		<pattern  id="SVGID_1_" xlink:href="#BG_Hill_Argyle" patternTransform="matrix(1 0 0 1 0 11.045)">
+		</pattern>
+		<path fill="url(#SVGID_1_)" d="M564.7,46.8c75.9-16.8,129-21,232-5.3c105.3,16,162.7,5.3,162.7,5.3v45.3l-701.8,0.7
+			C257.5,92.8,540.1,52.3,564.7,46.8z"/>
+		<pattern  id="SVGID_2_" xlink:href="#BG_Hill_Argyle" patternTransform="matrix(1 0 0 1 -57 56.045)">
+		</pattern>
+		<path fill="url(#SVGID_2_)" d="M-17.3,7.5c-1.5,1.5,119.3-20,214.7,8.7s132.1,13.1,169.3,4.7c58.7-13.3,136,7.3,202.7,72H-13.9
+			C-13.9,92.8-13.9,4.2-17.3,7.5z"/>
+	</g>
+</g>
+</svg>

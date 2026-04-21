@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 21 20.7" enable-background="new 0 0 21 20.7" xml:space="preserve" width="21" height="20.7" preserveAspectRatio="none">
+<g id="Waves_Background">
+</g>
+<g id="Cannon">
+</g>
+<g id="ship">
+</g>
+<g id="buoy_target">
+</g>
+<g id="buoy_broken">
+</g>
+<g id="cannonball">
+	<ellipse transform="matrix(5.217167e-002 -0.9986 0.9986 5.217167e-002 -0.3338 20.1701)" cx="10.5" cy="10.3" rx="9.9" ry="9.9"/>
+	<path fill="#00647D" d="M11,2.4C10,2.3,8.9,2.5,8,2.8c0.4-0.1,0.9-0.1,1.4-0.1c4.3,0.2,7.7,3.9,7.5,8.3c-0.2,3.3-2.3,6-5.3,7
+		c3.7-0.5,6.7-3.5,6.9-7.4C18.7,6.3,15.4,2.6,11,2.4z"/>
+</g>
+<g id="boom_2">
+</g>
+<g id="boom_1">
+</g>
+<g id="Waves_Foreground">
+</g>
+<g id="standing_idle_1">
+</g>
+</svg>

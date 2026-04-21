@@ -1,0 +1,11 @@
+<svg id="Layer_3" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 396 105" width="396" height="105" preserveAspectRatio="none"><defs><style>
+      .st0 {
+        stroke-miterlimit: 2;
+      }
+
+      .st0, .st1 {
+        fill: none;
+        stroke: #2c2b2f;
+        stroke-width: 2.25px;
+      }
+    </style></defs><polygon class="st0" points="270.597749 52.499997 126.156751 1.923005 126.156751 103.076995 270.597749 52.499997" /><line class="st1" x1="270.389546" y1="52.499997" x2="125.61255" y2="52.499997" /><polygon class="st0" points="125.402251 52.499997 269.84324 1.923005 269.84324 103.076995 125.402251 52.499997" /></svg>

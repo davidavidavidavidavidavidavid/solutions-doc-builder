@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" preserveAspectRatio="none"><defs><style>
+			.cls-1 {
+				fill: #fff;
+			}
+
+			.cls-2 {
+				fill: #5e21d8;
+			}
+
+			.cls-3 {
+				fill: #ffd941;
+			}
+		</style></defs><g id="Layer_2" data-name="Layer 2"><circle class="cls-1" cx="20.06" cy="20.73" r="16.87" transform="translate(-8.79 20.26) rotate(-45)" /><path class="cls-2" d="M7.92,27.34c-.14.11-1.23.78.19,1.57s7.48,1.42,12.27,1.42,10.28-1,11.85-2.14c0,0,1.12-.62,0-1.56s-2.22-1.95-2.4-2.14a1.61,1.61,0,0,1-.49-1.7c.25-1.63.51-12.71-9.42-13.11a9.45,9.45,0,0,0-9.07,5.6,12.64,12.64,0,0,0-.92,5.46,9.63,9.63,0,0,0,.45,2,2.12,2.12,0,0,1,0,1.89A26.27,26.27,0,0,1,7.92,27.34Z" /><circle class="cls-1" cx="19.6" cy="18.21" r="5.29" /><circle cx="19.6" cy="18.02" r="1.68" /></g></svg>

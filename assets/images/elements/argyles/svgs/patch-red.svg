@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 69.3 120" enable-background="new 0 0 69.3 120" xml:space="preserve" width="69.3" height="120" preserveAspectRatio="none"
+   style="background: #F21533">
+<g id="Layer_1">
+</g>
+<g id="Layer_2">
+	<g>
+		<polyline fill="#E21534" points="0,0 17.3,30 34.6,0 		"/>
+		<polyline fill="#E21534" points="34.6,0 52,30 69.3,0 		"/>
+		<polyline fill="#E81635" points="0,60 17.3,30 0,0 		"/>
+		<polygon fill="#D91530" points="34.6,0 17.3,30 34.6,60 52,30 		"/>
+		<polyline fill="#E81635" points="69.3,0 52,30 69.3,60 		"/>
+		<polygon fill="#E21534" points="17.3,30 0,60 17.3,90 34.6,60 		"/>
+		<polygon fill="#E21534" points="52,30 34.6,60 52,90 69.3,60 		"/>
+		<polyline fill="#D91530" points="0,120 17.3,90 0,60 		"/>
+		<polygon fill="#E81635" points="34.6,60 17.3,90 34.6,120 52,90 		"/>
+		<polyline fill="#D91530" points="69.3,60 52,90 69.3,120 		"/>
+		<polyline fill="#E21534" points="34.6,120 17.3,90 0,120 		"/>
+		<polyline fill="#E21534" points="69.3,120 52,90 34.6,120 		"/>
+		<path fill="#F21533" d="M52.3,120l17-29.5v-1L52.3,60l17-29.5v-1L52.3,0h-0.6l-17,29.5L17.6,0H17L0,29.5v1L17,60L0,89.5v1L17,120
+			l0,0h0.6l0,0l17-29.5l17,29.5l0,0L52.3,120L52.3,120z M52,0.5L69,30L52,59.5L34.9,30L52,0.5z M0.3,30l17-29.5l17,29.5l-17,29.5
+			L0.3,30z M17.3,119.5L0.3,90l17-29.5l17,29.5L17.3,119.5z M17.6,60l17-29.5l17,29.5l-17,29.5L17.6,60z M34.9,90l17-29.5L69,90
+			l-17,29.5L34.9,90z"/>
+	</g>
+</g>
+<g id="BG_Purple_2">
+</g>
+<g id="BGs">
+	<g id="BG_Kraken">
+	</g>
+</g>
+</svg>

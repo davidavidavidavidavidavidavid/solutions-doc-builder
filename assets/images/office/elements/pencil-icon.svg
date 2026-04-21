@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Header_Buttons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+   y="0px" viewBox="0 0 38 38" enable-background="new 0 0 38 38" xml:space="preserve" width="38" height="38" preserveAspectRatio="none">
+  <g>
+    <polygon fill="#00B2DD" points="30.6,14.1 30,13.5 29.4,12.9 24,7.5 5.3,26.1 12,32.8"/>
+    <rect x="27.2" y="2.6" transform="matrix(0.7071 -0.7071 0.7071 0.7071 3.8511 23.9111)" width="7.1" height="9.4" fill="#00B2DD"/>
+    <polygon fill="#00B2DD" points="1.4,36.5 11,33.5 4.4,26.9"/>
+  </g>
+</svg>

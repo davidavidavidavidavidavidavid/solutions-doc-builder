@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 190 180" enable-background="new 0 0 190 180" xml:space="preserve" width="190" height="180" preserveAspectRatio="none">
+<g id="back_water" display="none">
+</g>
+<g id="Waves_Background">
+</g>
+<g id="front_water" display="none">
+</g>
+<g id="front_waves">
+</g>
+<g id="left_bank">
+</g>
+<g id="right_bank">
+</g>
+<g id="splash_1">
+	<rect x="-669.4" y="153.7" fill="#009DB5" width="1150" height="39.9"/>
+	<path fill="#009DB5" d="M44.8,161.1c6.8-1.8,12-7.4,11.9-7.3c0.1-0.1-5-0.2-11.2-2.8c-6.2-2.3-13.5-7.1-16.4-8.6
+		c-6.3-2.8-10.8-2.3-11.2,3.3C17.4,151.1,29,165.3,44.8,161.1z"/>
+	<path fill="#009DB5" d="M141.4,160.6c-6.2-1.7-11-6.8-11-6.7c-0.1-0.1,4.6-0.1,10.3-2.5c5.7-2,12.4-6.3,15.1-7.8
+		c5.7-2.5,10-2.1,10.3,3.1C166.6,151.8,155.9,164.6,141.4,160.6z"/>
+	<path fill="#56C5D0" d="M99.2,159.1c-22.2,0.3-42.2-0.4-55.9-1.7c3.7,3.4,27.3,5.8,55.9,5.4c28.6-0.3,52.2-3.3,55.7-6.7
+		C141.3,157.7,121.4,158.9,99.2,159.1z"/>
+	<path opacity="0.5" fill="#56C5D0" d="M96.2,169.5c-37.2-0.7-67.8-4.2-90.8-8.2c6,3.7,42.9,11.3,90.7,12.2
+		c47.9,0.8,87.7-3.8,93.8-7.3C169.5,168.6,133.4,170.2,96.2,169.5z"/>
+	<path fill="#009DB5" d="M87.6,115.6c-1.5,5.5,2.4,11.6,6.8,11.2c4.1-0.8,10.5,0.6,12.9,0.7c4.6-0.2,6.1-3.1,2.3-9.3
+		C105.9,112,91.1,102.9,87.6,115.6z"/>
+	<path fill="#56C5D0" d="M89.7,116.6c0-0.1,0-0.2,0.1-0.3c2.8-10.2,14.7-2.9,17.7,2.1c1.2,2,1.8,3.6,1.7,4.8
+		c-0.1-0.3-0.3-0.6-0.5-0.8C96.1,110.1,90.5,117.1,89.7,116.6z"/>
+</g>
+<g id="splash_2">
+</g>
+<g id="splash_3">
+</g>
+<g id="inflatible_trampoline">
+</g>
+<g id="Waves_Foreground">
+</g>
+<g id="standing_idle_1">
+</g>
+</svg>

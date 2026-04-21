@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Solutions Doc Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  // Before bundle_init / bundle_core: playground flag + dist path for font.css and assets
+  window.IS_PLAYGROUND_PAGE = true;
+  window.BA_DIST_PATH = "/ba_lib/";
+  window.BASE_URL = "/";
+</script>
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.2/lodash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/benchmark/2.1.2/benchmark.min.js"></script>
+<script src="/ba_lib/bundle_init.js"></script>
+<script src="/ba_lib/bundle_vendor.js"></script>
+<script src="/ba_lib/bundle_core.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="view-print">
+
+<!-- ── Toolbar ──────────────────────────────────────────────────────────── -->
+<div id="toolbar">
+  <span class="title">Solutions Doc Builder</span>
+  <div class="tb-sep"></div>
+
+  <div class="tb-unit-group">
+    <label for="unit-input">Unit</label>
+    <input type="text" id="unit-input" placeholder="4">
+  </div>
+
+  <div class="tb-sep"></div>
+
+  <button class="tb-btn add-page" id="btn-add-page">+ Add page</button>
+  <button class="tb-btn add-lesson" id="btn-add-lesson">+ Add lesson</button>
+  <button class="tb-btn upload-pdf" id="btn-upload-pdf">↑ Upload PDF</button>
+  <!-- Hidden PDF file input -->
+  <input type="file" id="file-pdf" accept="application/pdf,.pdf" style="display:none">
+
+  <div class="tb-spacer"></div>
+
+  <span class="autosave-status" id="autosave-status"></span>
+  <button class="tb-btn save-btn" id="btn-save">↓ Save file</button>
+  <button class="tb-btn load-btn" id="btn-load">↑ Load file</button>
+  <button class="tb-btn export-csv-btn" id="btn-export-csv">↓ Export CSV</button>
+
+  <div class="tb-sep"></div>
+
+  <div class="zoom-ctrl">
+    <button class="tb-btn zoom-btn" id="btn-zoom-out">–</button>
+    <span class="zoom-pct" id="zoom-pct">75%</span>
+    <button class="tb-btn zoom-btn" id="btn-zoom-in">+</button>
+  </div>
+
+  <div class="tb-sep"></div>
+
+  <button class="tb-btn view-toggle" id="view-toggle-btn">Online view</button>
+  <button class="tb-btn print-btn" id="btn-print">Print / Save PDF</button>
+</div>
+
+<!-- ── Canvas ────────────────────────────────────────────────────────────── -->
+<div id="canvas"></div>
+
+<div style="display:flex;justify-content:center;">
+  <div id="bottom-btns">
+    <button class="bot-btn bot-add-page" id="bot-add-page">+ Add page to current lesson</button>
+    <button class="bot-btn bot-add-lesson" id="bot-add-lesson">+ Start new lesson</button>
+  </div>
+</div>
+
+<!-- ── Solution modal ───────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="sol-modal">
+  <div class="modal-box" style="width:520px;">
+    <h2 id="sol-modal-title">Add solution</h2>
+
+    <div class="field">
+      <label for="f-num">Problem number</label>
+      <input type="text" id="f-num" placeholder="e.g. 3  or  1–4  or  leave blank">
+      <span class="hint">Single number, range (1–4), or blank for a general note.</span>
+    </div>
+
+    <div class="field">
+      <label for="f-type">Type</label>
+      <select id="f-type">
+        <option value="full-solution">Full Solution</option>
+        <option value="look-out">Look Out</option>
+        <option value="connections">Connections</option>
+        <option value="prompt">Prompt</option>
+        <option value="custom">Custom</option>
+      </select>
+    </div>
+
+    <div class="field" id="custom-label-row">
+      <label for="f-custom-label">Custom label</label>
+      <input type="text" id="f-custom-label" placeholder="e.g. Easter Egg">
+    </div>
+
+    <div class="field">
+      <label for="f-body">Content</label>
+      <textarea id="f-body" rows="4" placeholder="Write the solution, tip, or note here…"></textarea>
+    </div>
+
+    <button class="toggle-diag" type="button" id="toggle-diag-btn">+ Add diagram / equation</button>
+
+    <div id="diag-section">
+      <!-- Tab switcher -->
+      <div class="diag-tabs">
+        <button class="diag-tab active" data-tab="latex">LaTeX / batex</button>
+        <button class="diag-tab" data-tab="area-model">Area Model</button>
+        <button class="diag-tab" data-tab="batex-diag">Diagram</button>
+        <button class="diag-tab" data-tab="image">Image</button>
+      </div>
+
+      <!-- LaTeX panel -->
+      <div class="diag-tab-panel active field" data-tab-panel="latex">
+        <label for="f-diag">Batex / LaTeX</label>
+        <textarea id="f-diag" rows="3" placeholder="e.g. \frac{a}{b} \times c = d"></textarea>
+        <span class="hint">Use $…$ inline, $$…$$ for display, \(…\) or \[…\]</span>
+        <div class="diag-preview" id="diag-preview">
+          <span style="color:#ccc;font-size:11px;">Preview will appear here</span>
+        </div>
+      </div>
+
+      <!-- Area model panel -->
+      <div class="diag-tab-panel field" data-tab-panel="area-model">
+        <label>Multiplication (area model)</label>
+        <div class="am-inputs">
+          <input type="number" id="am-a" placeholder="e.g. 48" min="1" max="99999">
+          <span>×</span>
+          <input type="number" id="am-b" placeholder="e.g. 23" min="1" max="99999">
+        </div>
+        <div class="am-editor-preview" id="am-preview">
+          <span style="color:#ccc;font-size:11px;">Enter two numbers above to preview</span>
+        </div>
+      </div>
+
+      <!-- Image panel -->
+      <div class="diag-tab-panel field" data-tab-panel="image">
+        <label>Image</label>
+        <div class="img-upload-area">
+          <button type="button" id="img-upload-btn">Upload image…</button>
+          <input type="file" id="f-img-file" accept="image/*" style="display:none">
+          <span class="hint">Or paste an image (Ctrl/Cmd+V) while this tab is active</span>
+        </div>
+        <div class="img-preview-wrap" id="img-preview-wrap" style="display:none">
+          <img id="img-preview" style="max-width:100%;display:block">
+          <button type="button" id="img-remove-btn">✕ Remove image</button>
+        </div>
+      </div>
+
+      <!-- Batex diagram panel -->
+      <div class="diag-tab-panel field" data-tab-panel="batex-diag">
+        <label for="f-batex-code">Diagram code</label>
+        <textarea id="f-batex-code" rows="5" placeholder="ctx.setSize(300, 120);&#10;TapeDiagram(ctx, 10, 30, {&#10;  cells: [{content: '$3$', width: 3, bgColor: 'lightblue'}, {content: '$4$', width: 4, bgColor: 'lightgray'}],&#10;  braces: [{content: '$7$', fromIndex: 0, length: 2}]&#10;});"></textarea>
+        <span class="hint">Use ctx, TapeDiagram, NumberLine, drawArrow, label, V, fillAll, DotGroups, Encircle, XOGrid.</span>
+        <button type="button" id="batex-render-btn" style="margin-top:6px;">Render</button>
+        <canvas id="batex-preview-canvas" style="display:none;max-width:100%;margin-top:8px;border:1px solid #e0e0e0;border-radius:3px;"></canvas>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="m-cancel" id="btn-sol-cancel">Cancel</button>
+      <button class="m-save" id="btn-sol-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Import CSV modal ─────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="import-csv-modal">
+  <div class="modal-box" style="width:500px;">
+    <h2>Import from CSV / spreadsheet</h2>
+    <div class="field">
+      <label for="import-csv-textarea">Paste rows here</label>
+      <textarea id="import-csv-textarea" rows="10" placeholder="Paste from spreadsheet or CSV file&#10;Column order: Section, Problem, Category, Solution Text, BaTeX&#10;Header row is optional — it will be auto-detected and skipped."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="m-cancel" id="btn-import-cancel">Cancel</button>
+      <button class="m-save m-append" id="btn-import-append">Append to existing</button>
+      <button class="m-save" id="btn-import-replace">Replace existing entries</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Lesson modal ──────────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="lesson-modal">
+  <div class="modal-box" style="width:380px;">
+    <h2>Start new lesson</h2>
+
+    <div class="field">
+      <label for="l-num">Lesson number</label>
+      <input type="text" id="l-num" placeholder="e.g. 2">
+    </div>
+
+    <div class="field">
+      <label for="l-name">Lesson name <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+      <input type="text" id="l-name" placeholder="e.g. Multiplication Fact Webs">
+    </div>
+
+    <div class="modal-actions">
+      <button class="m-cancel" id="btn-lesson-cancel">Cancel</button>
+      <button class="m-save" id="btn-lesson-save">Start lesson</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── PDF loading overlay ───────────────────────────────────────────────── -->
+<div id="pdf-loading" class="pdf-loading-overlay">
+  <div class="pdf-loading-box">
+    <div class="pdf-loading-spinner"></div>
+    <div id="pdf-loading-msg">Loading PDF…</div>
+  </div>
+</div>
+
+<script type="module" src="app.js"></script>
+<div class="app-toast" id="app-toast"></div>
+<div class="cell-ctx-menu" id="cell-ctx-menu">
+  <div class="ctx-item" id="ctx-remove">Remove image</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" id="ctx-replace">Replace image…</div>
+</div>
+</body>
+</html>

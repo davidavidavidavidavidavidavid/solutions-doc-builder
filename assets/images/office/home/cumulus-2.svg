@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 224.5 105" enable-background="new 0 0 224.5 105" xml:space="preserve" width="224.5" height="105" preserveAspectRatio="none">
+<g id="sky" display="none">
+</g>
+<g id="clouds">
+	<path fill="#609acb" d="M3.3,101.2c-0.1-1.4-0.1-2.8-0.1-4.3c0-26.7,16.2-48.3,36.1-48.3c0.3,0,0.5,0,0.8,0
+		c7-26.5,25.9-45.5,48.1-45.5c23.7,0,43.6,21.6,49.3,50.9c5-3.4,10.6-5.4,16.6-5.4c15.4,0,28.5,12.8,33.7,30.9
+		c2.1-0.7,4.4-1.1,6.7-1.1c11.7,0,21.7,9.3,26.2,22.8H3.3z"/>
+	
+		<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="1257.7163" y1="102.3437" x2="1257.7163" y2="31.7588" gradientTransform="matrix(-1 0 0 1 1354 0)">
+		<stop  offset="0" style="stop-color:#609acb"/>
+		<stop  offset="1" style="stop-color:#4D8EC5"/>
+	</linearGradient>
+	<path fill="url(#SVGID_1_)" d="M17.8,87.6C22.7,70.7,33.7,59,46.5,59c0.2,0,0.5,0,0.7,0
+		c6.1-26.5,22.5-45.5,41.8-45.5c20.6,0,37.8,21.6,42.8,50.9c4.3-3.4,9.2-5.4,14.4-5.4c12.8,0,23.7,11.8,28.6,28.7H17.8z"/>
+</g>
+</svg>

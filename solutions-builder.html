@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Solutions Doc Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Roboto',sans-serif;font-size:14px;background:#f0f0f0;color:#1a1a1a;min-height:100vh}
+
+/* toolbar */
+#toolbar{position:fixed;top:0;left:0;right:0;height:52px;background:#1e3a5f;display:flex;align-items:center;gap:10px;padding:0 20px;z-index:100;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+#toolbar .title{color:#fff;font-weight:700;font-size:15px;flex-shrink:0}
+.tb-sep{width:1px;height:28px;background:rgba(255,255,255,.2);margin:0 4px}
+.tb-unit-group{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:4px;padding:3px 10px}
+.tb-unit-group label{color:rgba(255,255,255,.75);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.tb-unit-group input{background:none;border:none;color:#fff;font-family:'Roboto',sans-serif;font-size:14px;font-weight:700;width:48px;outline:none}
+.tb-unit-group input::placeholder{color:rgba(255,255,255,.35)}
+.tb-spacer{flex:1}
+.tb-btn{border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 14px;border-radius:4px;font-size:12px;font-family:'Roboto',sans-serif;font-weight:500;cursor:pointer;white-space:nowrap}
+.tb-btn.add-page{background:rgba(255,255,255,.1)}.tb-btn.add-page:hover{background:rgba(255,255,255,.2)}
+.tb-btn.add-lesson{background:#e8a020;border-color:#e8a020;color:#1a1a1a;font-weight:700}.tb-btn.add-lesson:hover{background:#f0b030}
+.tb-btn.print-btn{background:#fff;color:#1e3a5f;font-weight:700;border-color:#fff}.tb-btn.print-btn:hover{background:#e8f0fa}
+
+/* canvas */
+#canvas{margin-top:52px;padding:24px 24px 8px;display:flex;flex-direction:column;gap:6px;align-items:center}
+.lesson-label{width:1122px;padding:6px 0 3px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#888;border-top:2px solid #e8a020;margin-top:16px}
+.lesson-label:first-child{margin-top:0;border-top-color:#1e3a5f}
+
+/* sheet */
+.sheet{width:1122px;height:794px;background:#fff;display:grid;grid-template-columns:1fr 1fr;box-shadow:0 2px 10px rgba(0,0,0,.18);position:relative;overflow:hidden}
+
+/* left col — white bg, image fills it */
+.student-col{position:relative;border-right:1.5px solid #ddd;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center}
+.student-col img.page-img{width:100%;height:100%;object-fit:contain;object-position:top center;position:absolute;top:0;left:0;display:block}
+.upload-prompt{display:flex;flex-direction:column;align-items:center;gap:12px;color:#bbb;pointer-events:none}
+.upload-prompt .big-icon{font-size:48px}
+.upload-prompt p{font-size:13px}
+.upload-btn{pointer-events:all;background:#1e3a5f;color:#fff;border:none;padding:9px 20px;border-radius:5px;font-size:13px;font-family:'Roboto',sans-serif;font-weight:500;cursor:pointer}
+.upload-btn:hover{background:#2a4f7c}
+.file-input{display:none}
+.remove-img{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:50%;width:26px;height:26px;font-size:13px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:10}
+.has-image .remove-img{display:flex}
+.has-image .upload-prompt{display:none}
+
+/* right col — white bg */
+.solutions-col{padding:0 18px 12px 16px;display:flex;flex-direction:column;overflow:hidden;gap:0;background:#fff}
+
+/* BA-style page header */
+.col-header{
+  font-size:15px;font-weight:700;letter-spacing:.01em;
+  font-family:'Roboto',sans-serif;
+  color:#fff;
+  background:#1a2744;
+  border-bottom:3px solid #f5a623;
+  padding:.09in .25in .09in .18in;
+  margin:0 -18px 7px -16px;
+  flex-shrink:0;
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  line-height:1.25;
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+}
+.col-header::after{
+  content:'';
+  position:absolute;
+  top:0;right:0;bottom:0;
+  width:60%;
+  background:linear-gradient(160deg,#8c0a22 0%,#c41230 100%);
+  clip-path:polygon(48% 0%,100% 0%,100% 100%,18% 100%);
+  pointer-events:none;
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+}
+
+/* overflow indicator */
+.overflow-bar{flex-shrink:0;font-size:10px;color:#991b1b;background:#fee2e2;border-radius:3px;padding:3px 8px;margin-bottom:4px;display:none}
+.overflow-bar.show{display:block}
+
+/* blocks container */
+.sol-blocks{flex:1;display:flex;flex-direction:column;justify-content:flex-start;overflow:hidden;min-height:0;gap:0}
+
+/* question group — groups all entries for same problem # */
+.q-group{display:flex;gap:9px;padding:7px 8px;border-bottom:1px solid #e8ecf0;flex:0 0 auto;position:relative;background:#fff;user-select:none}
+.q-group:last-child{border-bottom:none}
+.q-group.dragging{opacity:.4}
+.q-group.drag-over{border-top:2px solid #1a2744}
+
+/* drag handle */
+.drag-handle{flex-shrink:0;width:14px;cursor:grab;display:flex;align-items:flex-start;padding-top:3px;color:#ccc;font-size:12px;user-select:none}
+.drag-handle:active{cursor:grabbing}
+.q-group:hover .drag-handle{color:#aaa}
+
+.q-num-col{flex-shrink:0;width:40px;padding-top:2px}
+.num-badge{font-size:11px;font-weight:700;color:#1a2744;background:#e8eef7;border-radius:3px;min-width:38px;height:20px;display:flex;align-items:center;justify-content:center;padding:0 4px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+.q-entries{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+
+/* individual entry within a group */
+.sol-entry{position:relative}
+.sol-entry:hover .entry-actions{display:flex}
+.entry-actions{display:none;position:absolute;top:0;right:0;gap:4px}
+.ea-btn{background:none;border:none;cursor:pointer;font-size:12px;color:#bbb;padding:0 2px;line-height:1}
+.ea-btn:hover{color:#1e3a5f}
+.ea-btn.del:hover{color:#991b1b}
+
+.type-tag{display:inline-block;font-size:8px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:2px 7px;border-radius:10px;margin-bottom:2px}
+.tag-solution{background:#1a2744;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.tag-strategy{background:#fef3c7;color:#92400e}
+.tag-error{background:#fee2e2;color:#991b1b}
+.tag-pattern{background:#dcfce7;color:#166534}
+.tag-prompt{background:#f5e8ff;color:#7e22ce}
+.tag-pss{background:#fff7ed;color:#9a3412}
+.tag-custom{background:#ebebeb;color:#444}
+
+.sol-text{font-size:11px;line-height:1.55;color:#333;word-break:break-word}
+.sol-text .katex{font-size:1em}
+.sol-diag{margin-top:3px}
+.sol-diag .katex{font-size:1.05em}
+
+.add-sol-row{flex-shrink:0;padding-top:6px;border-top:1px solid #e8ecf0;margin-top:3px;background:#fff}
+.add-sol-btn{background:none;border:1px dashed #bbb;color:#888;border-radius:4px;padding:5px 12px;font-size:12px;font-family:'Roboto',sans-serif;cursor:pointer;width:100%}
+.add-sol-btn:hover{border-color:#1e3a5f;color:#1e3a5f;background:#edf2fb}
+
+.page-footer{position:absolute;bottom:0;left:50%;right:0;padding:4px 10px 5px;font-size:8px;font-family:'Roboto',sans-serif;color:#888;letter-spacing:.04em;border-top:1px solid #1a2744;text-align:right;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+/* bottom buttons */
+#bottom-btns{width:1122px;display:flex;gap:12px;padding:16px 0 32px}
+.bot-btn{flex:1;padding:14px;border-radius:6px;font-size:13px;font-family:'Roboto',sans-serif;font-weight:500;cursor:pointer}
+.bot-add-page{background:none;border:2px dashed #bbb;color:#888}.bot-add-page:hover{border-color:#1e3a5f;color:#1e3a5f;background:#f0f5ff}
+.bot-add-lesson{background:none;border:2px dashed #e8a020;color:#b07010;font-weight:700}.bot-add-lesson:hover{background:#fffbf0}
+
+/* modals */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:8px;padding:24px 28px;box-shadow:0 8px 32px rgba(0,0,0,.25);display:flex;flex-direction:column;gap:14px}
+.modal-box h2{font-size:16px;font-weight:700;color:#1e3a5f}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#888}
+.field input,.field select,.field textarea{font-family:'Roboto',sans-serif;font-size:13px;padding:7px 10px;border:1px solid #d0d0d0;border-radius:4px;color:#1a1a1a;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#1e3a5f}
+.field textarea{resize:vertical;line-height:1.55}
+.field .hint{font-size:10.5px;color:#aaa}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:4px}
+.m-cancel{background:none;border:1px solid #d0d0d0;color:#555;padding:7px 16px;border-radius:4px;font-family:'Roboto',sans-serif;font-size:13px;cursor:pointer}.m-cancel:hover{background:#f5f5f5}
+.m-save{background:#1e3a5f;border:none;color:#fff;padding:7px 18px;border-radius:4px;font-family:'Roboto',sans-serif;font-size:13px;font-weight:700;cursor:pointer}.m-save:hover{background:#2a4f7c}
+.toggle-diag{background:none;border:1px solid #d0d0d0;color:#555;border-radius:4px;padding:5px 12px;font-size:12px;font-family:'Roboto',sans-serif;cursor:pointer;align-self:flex-start}.toggle-diag:hover{border-color:#1e3a5f;color:#1e3a5f}
+#diag-section{display:none}#diag-section.show{display:flex;flex-direction:column;gap:8px}
+.diag-preview{border:1px solid #e0e0e0;border-radius:4px;padding:8px 12px;min-height:38px;font-size:13px;background:#fafafa;word-break:break-word}
+#custom-label-row{display:none}#custom-label-row.show{display:flex;flex-direction:column;gap:5px}
+
+@media print{
+  body{background:white}
+  #toolbar,#bottom-btns,.add-sol-row,.entry-actions,.remove-img,.upload-btn,.lesson-label,.drag-handle,.overflow-bar{display:none!important}
+  #canvas{margin-top:0;padding:0;gap:0}
+  .sheet{box-shadow:none;page-break-after:always;break-after:page;width:297mm;height:210mm}
+  .upload-prompt{display:none}
+  .solutions-col{background:#fff}
+  @page{size:A4 landscape;margin:0}
+}
+</style>
+</head>
+<body>
+
+<div id="toolbar">
+  <span class="title">Solutions Doc Builder</span>
+  <div class="tb-sep"></div>
+  <div class="tb-unit-group">
+    <label>Unit</label>
+    <input type="text" id="unit-input" placeholder="4" oninput="updateAllHeaders()">
+  </div>
+  <div class="tb-spacer"></div>
+  <button class="tb-btn add-page" onclick="addPage()">+ Add page</button>
+  <button class="tb-btn add-lesson" onclick="openLessonModal()">+ Add lesson</button>
+  <div class="tb-sep"></div>
+  <button class="tb-btn print-btn" onclick="window.print()">Print / Save PDF</button>
+</div>
+
+<div id="canvas"></div>
+
+<div style="display:flex;justify-content:center;">
+  <div id="bottom-btns">
+    <button class="bot-btn bot-add-page" onclick="addPage()">+ Add page to current lesson</button>
+    <button class="bot-btn bot-add-lesson" onclick="openLessonModal()">+ Start new lesson</button>
+  </div>
+</div>
+
+<!-- Solution modal -->
+<div class="modal-overlay" id="sol-modal">
+  <div class="modal-box" style="width:500px;">
+    <h2 id="sol-modal-title">Add solution</h2>
+    <div class="field">
+      <label>Problem number</label>
+      <input type="text" id="f-num" placeholder="e.g. 3  or  1–4  or  leave blank">
+      <span class="hint">Single number, range (1–4), or blank for a general note.</span>
+    </div>
+    <div class="field">
+      <label>Type</label>
+      <select id="f-type" onchange="onTypeChange()">
+        <option value="solution">Solution</option>
+        <option value="strategy">Strategy</option>
+        <option value="error">Common Error</option>
+        <option value="pattern">Pattern</option>
+        <option value="prompt">Prompting Questions</option>
+        <option value="pss">Problem Solving Strategy</option>
+        <option value="custom">Custom</option>
+      </select>
+    </div>
+    <div class="field" id="custom-label-row">
+      <label>Custom label</label>
+      <input type="text" id="f-custom-label" placeholder="e.g. Easter Egg">
+    </div>
+    <div class="field">
+      <label>Content</label>
+      <textarea id="f-body" rows="4" placeholder="Write the solution, tip, or note here…"></textarea>
+    </div>
+    <button class="toggle-diag" type="button" onclick="toggleDiag()">+ Add diagram / equation (batex)</button>
+    <div id="diag-section" class="field">
+      <label>Batex / LaTeX</label>
+      <textarea id="f-diag" rows="3" placeholder="e.g. \frac{a}{b} \times c = d" oninput="renderDiagPreview()"></textarea>
+      <span class="hint">Use $…$ inline, $$…$$ for display, \(…\) or \[…\]</span>
+      <div class="diag-preview" id="diag-preview"><span style="color:#ccc;font-size:11px;">Preview will appear here</span></div>
+    </div>
+    <div class="modal-actions">
+      <button class="m-cancel" onclick="closeSolModal()">Cancel</button>
+      <button class="m-save" onclick="saveSol()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lesson modal -->
+<div class="modal-overlay" id="lesson-modal">
+  <div class="modal-box" style="width:380px;">
+    <h2>Start new lesson</h2>
+    <div class="field">
+      <label>Lesson number</label>
+      <input type="text" id="l-num" placeholder="e.g. 2">
+    </div>
+    <div class="field">
+      <label>Lesson name <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+      <input type="text" id="l-name" placeholder="e.g. Multiplication Fact Webs">
+    </div>
+    <div class="modal-actions">
+      <button class="m-cancel" onclick="closeLessonModal()">Cancel</button>
+      <button class="m-save" onclick="saveLessonModal()">Start lesson</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let pageCount = 0;
+let activeSheet = null;
+let editingEntry = null; // {sheetId, groupKey, entryId}
+let currentLesson = {num:'1', name:''};
+
+const TYPE_LABELS = {
+  solution:'Solution', strategy:'Strategy', error:'Common Error',
+  pattern:'Pattern', prompt:'Prompting Questions', pss:'Problem Solving Strategy', custom:''
+};
+
+// Per-sheet data store: sheetId -> [{key, num, type, label, body, diag, id}]
+const sheetData = {};
+
+function getUnit(){ return document.getElementById('unit-input').value.trim()||'?'; }
+
+function headerText(l){
+  const n = l.name ? ' · '+l.name : '';
+  return `Unit ${getUnit()} · Lesson ${l.num}${n} · Teacher notes`;
+}
+function updateAllHeaders(){
+  document.querySelectorAll('[data-col-header]').forEach(el=>{
+    const l = JSON.parse(el.dataset.colHeader);
+    el.textContent = headerText(l);
+  });
+}
+
+/* ── groupKey: numeric sort key from problem number string ── */
+function groupKey(numStr){
+  if(!numStr) return 99999; // blanks go last
+  const m = numStr.match(/^(\d+)/);
+  return m ? parseInt(m[1]) : 99999;
+}
+
+/* ── Render all blocks for a sheet ── */
+function renderBlocks(sheetId){
+  const container = document.getElementById('blocks-'+sheetId);
+  if(!container) return;
+  const entries = sheetData[sheetId]||[];
+
+  // Group by num string
+  const groups = {};
+  const order  = [];
+  entries.forEach(e=>{
+    const k = e.num||'';
+    if(!groups[k]){ groups[k]=[]; order.push(k); }
+    groups[k].push(e);
+  });
+
+  container.innerHTML = '';
+
+  // Sort groups: numbered first (numerically), then blanks
+  const sortedKeys = order.filter((v,i,a)=>a.indexOf(v)===i).sort((a,b)=>{
+    return groupKey(a) - groupKey(b);
+  });
+
+  sortedKeys.forEach(numStr=>{
+    const grpEntries = groups[numStr];
+    const gid = 'grp-'+sheetId+'-'+encodeKey(numStr);
+    const div = document.createElement('div');
+    div.className = 'q-group';
+    div.id = gid;
+    div.dataset.numStr = numStr;
+    div.dataset.sheetId = sheetId;
+    div.draggable = true;
+
+    // Drag handle
+    const handle = document.createElement('div');
+    handle.className = 'drag-handle';
+    handle.title = 'Drag to reorder';
+    handle.innerHTML = '⠿';
+    div.appendChild(handle);
+
+    // Number badge (only if numStr is non-empty)
+    const numCol = document.createElement('div');
+    numCol.className = 'q-num-col';
+    if(numStr){
+      const badge = document.createElement('div');
+      badge.className = 'num-badge';
+      badge.textContent = numStr;
+      numCol.appendChild(badge);
+    }
+    div.appendChild(numCol);
+
+    // Entries
+    const entriesDiv = document.createElement('div');
+    entriesDiv.className = 'q-entries';
+    grpEntries.forEach(e=>{
+      entriesDiv.appendChild(buildEntryEl(sheetId, e));
+    });
+    div.appendChild(entriesDiv);
+
+    // Drag events
+    div.addEventListener('dragstart', onDragStart);
+    div.addEventListener('dragover',  onDragOver);
+    div.addEventListener('dragleave', onDragLeave);
+    div.addEventListener('drop',      onDrop);
+    div.addEventListener('dragend',   onDragEnd);
+
+    container.appendChild(div);
+  });
+
+  checkOverflow(sheetId);
+  requestAnimationFrame(() => distributeSpaceNow(sheetId));
+}
+
+function encodeKey(s){ return s.replace(/[^a-zA-Z0-9]/g,'_')||'blank'; }
+
+function buildEntryEl(sheetId, e){
+  const wrap = document.createElement('div');
+  wrap.className = 'sol-entry';
+  wrap.dataset.entryId = e.id;
+
+  const label = e.type==='custom' ? (e.customLabel||'Note') : TYPE_LABELS[e.type];
+
+  let diagHtml = '';
+  if(e.diag){
+    diagHtml = `<div class="sol-diag" data-raw="${escAttr(e.diag)}"></div>`;
+  }
+
+  wrap.innerHTML = `
+    <span class="type-tag tag-${e.type}">${escHtml(label)}</span>
+    <div class="sol-text">${escHtml(e.body)}</div>
+    ${diagHtml}
+    <div class="entry-actions">
+      <button class="ea-btn" onclick="editEntry('${sheetId}','${e.id}')" title="Edit">✎</button>
+      <button class="ea-btn del" onclick="deleteEntry('${sheetId}','${e.id}')" title="Delete">✕</button>
+    </div>`;
+
+  // Render math
+  if(e.diag){
+    const diagEl = wrap.querySelector('.sol-diag');
+    diagEl.textContent = e.diag;
+    renderMath(diagEl);
+  }
+  return wrap;
+}
+
+function renderMath(el){
+  try{
+    renderMathInElement(el,{
+      delimiters:[
+        {left:'$$',right:'$$',display:true},
+        {left:'\\(',right:'\\)',display:false},
+        {left:'\\[',right:'\\]',display:true},
+        {left:'$',right:'$',display:false}
+      ],
+      throwOnError:false
+    });
+  }catch(e){}
+}
+
+/* ── Overflow check ── */
+function checkOverflow(sheetId){
+  const container = document.getElementById('blocks-'+sheetId);
+  const bar = document.getElementById('overflow-'+sheetId);
+  if(!container||!bar) return;
+  // Check if content overflows
+  const isOver = container.scrollHeight > container.clientHeight + 4;
+  bar.classList.toggle('show', isOver);
+  const hidden = (sheetData[sheetId]||[]).length;
+  if(isOver) bar.textContent = `⚠ Some solutions may be cut off in print. Consider moving overflow to another page.`;
+}
+
+/* ── Space distribution ── */
+function distributeSpaceNow(sheetId){
+  const c = document.getElementById('blocks-'+sheetId);
+  if(!c) return;
+  const groups = [...c.querySelectorAll('.q-group')];
+
+  // Reset padding so we measure true natural heights
+  groups.forEach(g => { g.style.paddingBottom = ''; });
+  if(!groups.length) return;
+
+  // Reading offsetHeight forces a synchronous layout flush with padding reset
+  const containerH = c.clientHeight;
+  if(containerH <= 0) return;
+  const naturalSum = groups.reduce((s, g) => s + g.offsetHeight, 0);
+  const leftover = containerH - naturalSum;
+
+  // If negative, content overflows — don't compress, let overflow warning handle it
+  if(leftover <= 0) return;
+
+  const perGroup = leftover / groups.length;
+  groups.forEach(g => { g.style.paddingBottom = perGroup + 'px'; });
+}
+
+/* ── Drag to reorder groups ── */
+let dragSrcGroup = null;
+function onDragStart(e){
+  dragSrcGroup = this;
+  this.classList.add('dragging');
+  e.dataTransfer.effectAllowed='move';
+}
+function onDragOver(e){
+  e.preventDefault();
+  e.dataTransfer.dropEffect='move';
+  if(this !== dragSrcGroup) this.classList.add('drag-over');
+}
+function onDragLeave(){ this.classList.remove('drag-over'); }
+function onDrop(e){
+  e.preventDefault();
+  this.classList.remove('drag-over');
+  if(!dragSrcGroup||dragSrcGroup===this) return;
+  const sheetId = this.dataset.sheetId;
+  // Reorder sheetData based on new DOM position
+  const srcNum = dragSrcGroup.dataset.numStr;
+  const tgtNum = this.dataset.numStr;
+  const data = sheetData[sheetId];
+  // Separate entries by group
+  const srcEntries = data.filter(x=>(x.num||'')===srcNum);
+  const rest = data.filter(x=>(x.num||'')!==srcNum);
+  // Find insertion index based on target group
+  const tgtIdx = rest.findIndex(x=>(x.num||'')===tgtNum);
+  const insertAt = tgtIdx === -1 ? rest.length : tgtIdx;
+  rest.splice(insertAt, 0, ...srcEntries);
+  sheetData[sheetId] = rest;
+  renderBlocks(sheetId);
+}
+function onDragEnd(){
+  this.classList.remove('dragging');
+  document.querySelectorAll('.drag-over').forEach(el=>el.classList.remove('drag-over'));
+  dragSrcGroup = null;
+}
+
+/* ── Auto-sort by question number ── */
+function autoSort(sheetId){
+  if(!sheetData[sheetId]) return;
+  sheetData[sheetId].sort((a,b)=>groupKey(a.num||'') - groupKey(b.num||''));
+  renderBlocks(sheetId);
+}
+
+/* ── Edit entry ── */
+function editEntry(sheetId, entryId){
+  const entry = (sheetData[sheetId]||[]).find(e=>e.id===entryId);
+  if(!entry) return;
+  editingEntry = {sheetId, entryId};
+  activeSheet = sheetId;
+  document.getElementById('f-num').value   = entry.num||'';
+  document.getElementById('f-type').value  = entry.type;
+  document.getElementById('f-body').value  = entry.body||'';
+  document.getElementById('f-diag').value  = entry.diag||'';
+  document.getElementById('f-custom-label').value = entry.customLabel||'';
+  onTypeChange();
+  if(entry.diag){
+    document.getElementById('diag-section').classList.add('show');
+    renderDiagPreview();
+  } else {
+    document.getElementById('diag-section').classList.remove('show');
+  }
+  document.getElementById('sol-modal-title').textContent = 'Edit solution';
+  document.getElementById('sol-modal').classList.add('open');
+}
+
+function deleteEntry(sheetId, entryId){
+  sheetData[sheetId] = (sheetData[sheetId]||[]).filter(e=>e.id!==entryId);
+  renderBlocks(sheetId);
+}
+
+/* ── Solution modal ── */
+function openSolModal(sheetId){
+  editingEntry = null;
+  activeSheet = sheetId;
+  document.getElementById('f-num').value='';
+  document.getElementById('f-type').value='solution';
+  document.getElementById('f-body').value='';
+  document.getElementById('f-diag').value='';
+  document.getElementById('f-custom-label').value='';
+  document.getElementById('diag-preview').innerHTML='<span style="color:#ccc;font-size:11px;">Preview will appear here</span>';
+  document.getElementById('diag-section').classList.remove('show');
+  document.getElementById('custom-label-row').classList.remove('show');
+  document.getElementById('sol-modal-title').textContent='Add solution';
+  document.getElementById('sol-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('f-num').focus(),50);
+}
+function closeSolModal(){
+  document.getElementById('sol-modal').classList.remove('open');
+  activeSheet=null; editingEntry=null;
+}
+function onTypeChange(){
+  document.getElementById('custom-label-row').classList.toggle('show', document.getElementById('f-type').value==='custom');
+}
+function toggleDiag(){ document.getElementById('diag-section').classList.toggle('show'); }
+function renderDiagPreview(){
+  const raw = document.getElementById('f-diag').value;
+  const el  = document.getElementById('diag-preview');
+  if(!raw.trim()){el.innerHTML='<span style="color:#ccc;font-size:11px;">Preview will appear here</span>';return;}
+  el.textContent=raw;
+  renderMath(el);
+}
+
+function saveSol(){
+  const num    = document.getElementById('f-num').value.trim();
+  const type   = document.getElementById('f-type').value;
+  const body   = document.getElementById('f-body').value.trim();
+  const diag   = document.getElementById('f-diag').value.trim();
+  const cLabel = document.getElementById('f-custom-label').value.trim();
+  if(!body&&!diag){document.getElementById('f-body').focus();return;}
+
+  if(!sheetData[activeSheet]) sheetData[activeSheet]=[];
+
+  if(editingEntry){
+    const idx = sheetData[activeSheet].findIndex(e=>e.id===editingEntry.entryId);
+    if(idx>-1){
+      sheetData[activeSheet][idx] = {
+        ...sheetData[activeSheet][idx], num, type, body, diag, customLabel:cLabel
+      };
+    }
+  } else {
+    sheetData[activeSheet].push({
+      id:'e'+Date.now(), num, type, body, diag, customLabel:cLabel
+    });
+  }
+
+  autoSort(activeSheet);
+  closeSolModal();
+}
+
+/* ── Pages & lessons ── */
+function addPage(lessonOverride){
+  const lesson = lessonOverride||currentLesson;
+  pageCount++;
+  const id='sheet-'+pageCount;
+  sheetData[id]=[];
+
+  const sheet=document.createElement('div');
+  sheet.className='sheet';
+  sheet.id=id;
+  const lj=JSON.stringify(lesson).replace(/"/g,'&quot;');
+
+  sheet.innerHTML=`
+    <div class="student-col" id="left-${id}">
+      <div class="upload-prompt">
+        <div class="big-icon">📄</div>
+        <p>No image uploaded</p>
+        <button class="upload-btn" onclick="triggerUpload('${id}')">+ Add answers image</button>
+      </div>
+      <input type="file" accept="image/*" class="file-input" id="file-${id}" onchange="loadImage('${id}',this)">
+      <button class="remove-img" onclick="removeImage('${id}')" title="Remove">✕</button>
+    </div>
+    <div class="solutions-col" id="right-${id}">
+      <div class="col-header" data-col-header="${lj}" id="header-${id}">${headerText(lesson)}</div>
+      <div class="overflow-bar" id="overflow-${id}"></div>
+      <div class="sol-blocks" id="blocks-${id}"></div>
+      <div class="add-sol-row">
+        <button class="add-sol-btn" onclick="openSolModal('${id}')">+ Add solution</button>
+      </div>
+    </div>
+    <div class="page-footer">Unit ${getUnit()} · Lesson ${lesson.num} · Page ${pageCount}</div>`;
+
+  document.getElementById('canvas').appendChild(sheet);
+  sheet.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function openLessonModal(){
+  document.getElementById('l-num').value=(parseInt(currentLesson.num)||0)+1;
+  document.getElementById('l-name').value='';
+  document.getElementById('lesson-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('l-num').focus(),50);
+}
+function closeLessonModal(){ document.getElementById('lesson-modal').classList.remove('open'); }
+function saveLessonModal(){
+  const num=(document.getElementById('l-num').value.trim())||String((parseInt(currentLesson.num)||0)+1);
+  const name=document.getElementById('l-name').value.trim();
+  currentLesson={num,name};
+  closeLessonModal();
+  const label=document.createElement('div');
+  label.className='lesson-label';
+  label.textContent=`Lesson ${num}${name?' — '+name:''}`;
+  document.getElementById('canvas').appendChild(label);
+  addPage(currentLesson);
+}
+
+/* ── Image ── */
+function triggerUpload(id){ document.getElementById('file-'+id).click(); }
+function loadImage(id,input){
+  if(!input.files||!input.files[0]) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const col=document.getElementById('left-'+id);
+    const old=col.querySelector('img.page-img');
+    if(old) old.remove();
+    const img=document.createElement('img');
+    img.src=e.target.result;
+    img.className='page-img';
+    col.appendChild(img);
+    col.classList.add('has-image');
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+function removeImage(id){
+  const col=document.getElementById('left-'+id);
+  const img=col.querySelector('img.page-img');
+  if(img) img.remove();
+  col.classList.remove('has-image');
+  document.getElementById('file-'+id).value='';
+}
+
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(s){ return String(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+// Close modals on overlay click
+['sol-modal','lesson-modal'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',e=>{
+    if(e.target===document.getElementById(id))
+      id==='sol-modal'?closeSolModal():closeLessonModal();
+  });
+});
+
+addPage({num:'1',name:''});
+</script>
+</body>
+</html>
